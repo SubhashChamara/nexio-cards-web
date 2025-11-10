@@ -300,7 +300,7 @@ form.addEventListener("submit", function (e) {
 
 const basePath = window.location.pathname.split("/")[1];
 const baseImage = new Image();
-baseImage.src = `${window.location.origin}/assets/img/card.png`;
+baseImage.src = `/img/card.png`;
 
 
   baseImage.onload = function () {
