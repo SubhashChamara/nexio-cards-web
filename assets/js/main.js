@@ -279,7 +279,7 @@
     }
 
     const baseImage = new Image();
-    baseImage.src = "/assets/img/card.png"; // your uploaded card image
+    baseImage.src = "./assets/img/card.png"; // your uploaded card image
 
     baseImage.onload = function () {
       const canvas = document.createElement("canvas");
