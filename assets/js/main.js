@@ -256,4 +256,106 @@
     });
   });
 
+  const form = document.querySelector(".nexio-order-form");
+  const modal = document.getElementById("cardPreviewModal");
+  const previewImage = document.getElementById("previewImage");
+  const confirmBtn = document.getElementById("confirmSend");
+  const cancelBtn = document.getElementById("cancelPreview");
+
+  let generatedImage = null;
+  let message = "";
+  const phone = "94706600858"; // WhatsApp number (no + or 0)
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const name = document.getElementById("inputName").value.trim();
+    const role = document.getElementById("inputRole").value.trim();
+    const company = document.getElementById("inputCompany").value.trim() || "NEXIO CARD (PVT) LTD.";
+
+    if (!name || !role) {
+      alert("Please fill in your Name and Role / Title.");
+      return;
+    }
+
+    const baseImage = new Image();
+    baseImage.src = "/assets/img/card.png"; // your uploaded card image
+
+    baseImage.onload = function () {
+      const canvas = document.createElement("canvas");
+      const ctx = canvas.getContext("2d");
+
+      canvas.width = baseImage.width;
+      canvas.height = baseImage.height;
+
+      // Draw the original card
+      ctx.drawImage(baseImage, 0, 0);
+
+      // Text styling
+      ctx.fillStyle = "white";
+      ctx.textAlign = "left"; // Center align horizontally
+      ctx.textBaseline = "middle"; // Easier vertical control
+
+      // Calculate the horizontal center of the image
+      const centerX = 40;
+
+      // Add name (larger font)
+      ctx.font = "bold 16px Poppins";
+      ctx.fillText(name.toUpperCase(), centerX, 100);
+
+      // Add role (smaller font)
+      ctx.font = "bold 12px Poppins";
+      ctx.fillText(role.toUpperCase(), centerX, 130);
+
+      // Add company (smallest font)
+      ctx.font = "12px Poppins";
+      ctx.fillText(company.toUpperCase(), centerX, 150);
+
+      // Convert to data URL
+      generatedImage = canvas.toDataURL("image/png");
+      previewImage.src = generatedImage;
+
+      // Prepare WhatsApp message
+      message =
+        `New Nexio Card order:%0A` +
+        `*Full Name:* ${name}%0A` +
+        `*Role / Title:* ${role}%0A` +
+        (company ? `*Company:* ${company}%0A` : "") +
+        `%0AUser’s personalized card image is attached.`;
+
+      // Show modal
+      modal.style.display = "block";
+    };
+  });
+
+  confirmBtn.addEventListener("click", function () {
+    if (generatedImage) {
+      // Trigger image download
+      const link = document.createElement("a");
+      link.download = "nexio_card.png";
+      link.href = generatedImage;
+      link.click();
+
+      // Open WhatsApp
+      const whatsappURL = `https://wa.me/${phone}?text=${message}`;
+      window.open(whatsappURL, "_blank");
+
+      // Close modal
+      modal.style.display = "none";
+    }
+  });
+
+  cancelBtn.addEventListener("click", function () {
+    modal.style.display = "none";
+  });
+
+  // Close modal when clicking outside
+  window.onclick = function (event) {
+    if (event.target === modal) {
+      modal.style.display = "none";
+    }
+  };
+
+
+
 
